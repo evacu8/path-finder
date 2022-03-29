@@ -1,0 +1,21 @@
+.h1 {
+    font-size: 100px;
+    font-weight: $font-black;
+    text-transform: uppercase;
+  }
+    
+  .h2 {
+    font-size: 60px;
+    letter-spacing: 6px;
+    line-height: 27px;
+    font-weight: $font-bold;
+    text-transform: uppercase;
+  }
+    
+  .h3 {
+    font-size: 36px;
+    letter-spacing: 11px;
+    line-height: 72px;
+    font-weight: $font-black;
+    text-transform: uppercase;
+  }

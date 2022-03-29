@@ -1,0 +1,49 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    background: $color-dark;
+    font-family: $font-text;
+    font-size: 40px;
+    letter-spacing: 4px;
+    line-height: 27px;
+    color: $color-light;
+    position: relative;
+  }
+  
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .main-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    ul {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      margin: 50 auto;
+      list-style-type: none;
+      font-size: 30px;
+      letter-spacing: 2px;
+      font-weight: $font-semibold;
+      a {
+        text-decoration: none;
+        color: $color-light;
+        text-transform: uppercase;
+        padding: 0 30px;
+      }
+    }
+  }
+
+  .footer {
+    font-size: 20px;
+    font-weight: $font-normal;
+    text-align: center;
+  }
