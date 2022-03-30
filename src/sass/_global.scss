@@ -1,9 +1,10 @@
 #pages {
-    > * {
-      display: none;
-    }
-  
-    > .active {
-      display: block;
-    }
+  > * {
+    display: none;
+    position: relative;
   }
+
+  > .active {
+    display: block;
+  }
+}
