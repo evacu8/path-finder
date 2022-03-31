@@ -1,10 +1,20 @@
 export const select = {
-  
+  templateOf: {
+    finderGrid: '#template-finder-grid',
+  },
+
   containerOf: {
     pages: '#pages',
     about: '.about-wrapper',
     finder: '.finder-wrapper',
+    grid: '.grid-wrapper',
   },
+
+  DOMelement: {
+    gridHeader: '.grid-header',
+  },
+
+
   all: {
     
   },
@@ -26,8 +36,13 @@ export const classNames = {
   }
 };
 
+export const templates= {
+  finderGrid: Handlebars.compile(document.querySelector(select.templateOf.finderGrid).innerHTML),
+};
+
 export const settings = {
-  xxx: {
-   
+  finderGrid: {
+    rows: 10,
+    columns: 10,
   },
 };

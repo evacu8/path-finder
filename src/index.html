@@ -50,7 +50,12 @@
       </section>
       <section id="finder">
         <div id="finder-wrapper" class="finder-wrapper">
-          <div>Finder page</div>
+          <div class="finder-header">
+            <h2 class="grid-header">Draw routes</h2>
+            <h2 class="grid-header">Pick start and finish</h2>
+            <h2 class="grid-header">The best route is</h2>
+          </div>
+          <div class="grid-wrapper"></div>
         </div>
       </section>
     </div>
@@ -58,6 +63,15 @@
       <p>All rights reserved</p>
     </div>
   </div>
+
+  <script id="template-finder-grid" type="text/x-handlebars-template">
+    <div class="grid-box">
+      <h1>{{ rowsNumber }}</h1>
+      <h1>{{ columnsNumber }}</h1>
+    </div>
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
   <script src="js/app.js" type="module"></script>
 
 </body>
