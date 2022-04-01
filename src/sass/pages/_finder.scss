@@ -1,0 +1,16 @@
+.finder-header, .button-wrapper {
+  margin: 0 auto;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.grid-header, .button-wrapper a {
+  display: none;
+  &.active {
+    display: block;
+  }
+}
+
+
+
+

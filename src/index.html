@@ -51,11 +51,16 @@
       <section id="finder">
         <div id="finder-wrapper" class="finder-wrapper">
           <div class="finder-header">
-            <h2 class="grid-header">Draw routes</h2>
-            <h2 class="grid-header">Pick start and finish</h2>
-            <h2 class="grid-header">The best route is</h2>
+            <h2 class="grid-header active" id="step-1">Draw routes</h2>
+            <h2 class="grid-header" id="step-2">Pick start and finish</h2>
+            <h2 class="grid-header" id="step-3">The best route is...</h2>
           </div>
           <div class="grid-wrapper"></div>
+          <div class="button-wrapper">
+            <a href="#finish-drawing" id="step-1" class="button active">Finish drawing</a>
+            <a href="#compute" id="step-2" class="button">Compute</a>
+            <a href="#start-again" id="step-3" class="button">Start again</a>
+          </div>
         </div>
       </section>
     </div>

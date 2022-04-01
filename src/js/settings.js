@@ -8,10 +8,13 @@ export const select = {
     about: '.about-wrapper',
     finder: '.finder-wrapper',
     grid: '.grid-wrapper',
+    headers: '.finder-header',
+    buttons: '.button-wrapper',
   },
 
   DOMelement: {
     gridHeader: '.grid-header',
+    button: '.button',
   },
 
 
