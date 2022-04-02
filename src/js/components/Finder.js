@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import { select, settings, templates } from '../settings.js';
 
 class Finder {
@@ -11,6 +12,8 @@ class Finder {
 
     thisFinder.step = 1;
     thisFinder.selectedCells = {};
+    thisFinder.permittedNext = {};
+
     
     thisFinder.render();
     thisFinder.drawGrid();
@@ -96,14 +99,23 @@ class Finder {
 
   cellCheck(cellId, target) {
     const thisFinder = this;
-    if (thisFinder.selectedCells == {}){
+
+    if (Object.keys(thisFinder.selectedCells).length === 0){
       thisFinder.cellSelect(cellId, target);
-    } else if (!thisFinder.selectedCells[cellId]){
-      thisFinder.cellSelect(cellId, target);
-    }
+
+    } else if (!thisFinder.selectedCells.hasOwnProperty(cellId)){
+      if (thisFinder.permittedNext[cellId]){
+        thisFinder.cellSelect(cellId, target);
+      } else { 
+        alert('Please select adjacent cell');
+      }
+
+    } else if (thisFinder.selectedCells.hasOwnProperty(cellId)){
+      thisFinder.cellDisselect(cellId, target);
+    } 
   }
 
-  permittedSelection(cellId, target) {
+  permittedSelection(cellId) {
     const thisFinder = this;
 
     const selectedRow = cellId.split('-')[0];
@@ -114,19 +126,20 @@ class Finder {
     for (let cell of cells){
       const rowNumber = cell.getAttribute('cellid').split('-')[0];
       const colNumber = cell.getAttribute('cellid').split('-')[1];
-      const permittedCell = rowNumber + '-' + colNumber;
+      const comparedCell = rowNumber + '-' + colNumber;
 
-      if(!thisFinder.selectedCells[permittedCell]){
+      if(!thisFinder.selectedCells.hasOwnProperty(comparedCell)){
         if((colNumber == selectedCol && selectedRow == rowNumber -1) ||
           (colNumber == selectedCol && rowNumber == selectedRow - 1) ||
-          (rowNumber == selectedRow && selectedCol == colNumber -1) ||
+          (rowNumber == selectedRow && selectedCol == colNumber - 1) ||
           (rowNumber == selectedRow && colNumber == selectedCol - 1)
         ){
-          thisFinder.selectedCells[cellId].permittedNext.push(cell);
+          thisFinder.permittedNext[comparedCell] = {
+            element: cell,
+          };
         }
       } 
     }
-    console.log(thisFinder.selectedCells);
   }
 
   cellSelect(cellId, target){
@@ -135,12 +148,18 @@ class Finder {
     thisFinder.selectedCells[cellId] = {
       selected: 'yes',
       element: target,
-      permittedNext: [],
     };
 
     target.classList.add('selected');
+    thisFinder.permittedSelection(cellId);
+  }
 
-    thisFinder.permittedSelection(cellId, target);
+  cellDisselect(cellId, target){
+    const thisFinder = this;
+
+    target.classList.remove('selected');
+    delete thisFinder.selectedCells[cellId];
+ 
   }
 }
 
