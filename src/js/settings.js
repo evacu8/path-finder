@@ -14,6 +14,7 @@ export const select = {
 
   DOMelement: {
     gridHeader: '.grid-header',
+    gridBox: '.grid-box',
     button: '.button',
   },
 

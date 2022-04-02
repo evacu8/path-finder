@@ -68,6 +68,11 @@ body {
   }
 }
 
+.grid-wrapper {
+  margin: 0 auto;
+  width: fit-content;
+}
+
 .footer {
   font-size: 20px;
   font-weight: $font-normal;

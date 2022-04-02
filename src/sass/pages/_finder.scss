@@ -6,11 +6,43 @@
 
 .grid-header, .button-wrapper a {
   display: none;
+
   &.active {
     display: block;
   }
 }
 
+.button-wrapper {
+  margin-top: 50px;
+}
 
+.grid-box {
+  display: flex;
+  flex-wrap: wrap;
+  direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+  height: 500px;
+  
+  .row {
+    display: flex;
+    flex: 1;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    direction: column;
+    margin: 0 auto;
+    outline: 2px solid $color-light;
 
-
+    .cell {
+      flex: 0 1 auto;
+      height: $cell-size;
+      width: $cell-size;
+      outline: 2px solid $color-light;
+      content: ' ';
+      cursor: pointer;
+      margin: 0;
+    }
+  }
+}

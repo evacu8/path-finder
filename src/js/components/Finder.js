@@ -1,5 +1,4 @@
 import { select, settings, templates } from '../settings.js';
-// import utils from '../utils.js';
 
 class Finder {
   constructor() {
@@ -12,8 +11,8 @@ class Finder {
 
     thisFinder.step = 1;
     
-    thisFinder.drawGrid();
     thisFinder.render();
+    thisFinder.drawGrid();
     thisFinder.activeStep(thisFinder.step);
     thisFinder.initActions();
   }
@@ -21,23 +20,28 @@ class Finder {
   render() {
     const thisFinder = this;
 
-    const data = {
-      rowsNumber: thisFinder.rowsNumber,
-      columnsNumber: thisFinder.columnsNumber,
-    };
-
     const generatedHTML = templates.finderGrid;
   
-    thisFinder.gridWrapper.innerHTML = generatedHTML(data);
-    console.log(generatedHTML(data));
+    thisFinder.gridWrapper.innerHTML = generatedHTML();
 
   }
 
   drawGrid() {
-    // const thisFinder = this;
+    const thisFinder = this;
 
-    /* draw 'columnsNumber' cells for each of 'rowsNumber' rows */
+    const gridBox = document.querySelector(select.DOMelement.gridBox);
 
+    for (let rowId = 1; rowId <= thisFinder.rowsNumber; rowId++){
+      const rowElement = document.createElement('div');
+      rowElement.classList.add('row');
+      gridBox.appendChild(rowElement);
+
+      for (let cellId = 1; cellId <= thisFinder.rowsNumber; cellId++){
+        const cellElement = document.createElement('div');
+        cellElement.classList.add('cell');
+        rowElement.appendChild(cellElement);
+      }
+    }
   }
 
   activeStep(stepId) {
@@ -56,32 +60,31 @@ class Finder {
     const activeHeader = document.querySelector(`[class="finder-header"] [id="step-${stepId}"]`);
     activeHeader.classList.add('active');
 
-    thisFinder.activeButton = document.querySelector(`[class="button-wrapper"] [id="step-${stepId}"]`);
+    thisFinder.activeButton = document.querySelector(`[class="button-wrapper"] [id="step-${stepId}b"]`);
+    // console.log(thisFinder.activeButton);
     thisFinder.activeButton.classList.add('active');
   }
 
   initActions() {
     const thisFinder = this;
     
-    document.querySelector(`[class="button-wrapper"] [id="step-1"]`).addEventListener('click', function(e){
+    document.querySelector(`[class="button-wrapper"] [id="step-1b"]`).addEventListener('click', function(e){
       e.preventDefault();
       thisFinder.step = 2;
       thisFinder.activeStep(thisFinder.step);
     });
 
-    document.querySelector(`[class="button-wrapper"] [id="step-2"]`).addEventListener('click', function(e){
+    document.querySelector(`[class="button-wrapper"] [id="step-2b"]`).addEventListener('click', function(e){
       e.preventDefault();
       thisFinder.step = 3;
       thisFinder.activeStep(thisFinder.step);
     });
 
-    document.querySelector(`[class="button-wrapper"] [id="step-3"]`).addEventListener('click', function(e){
+    document.querySelector(`[class="button-wrapper"] [id="step-3b"]`).addEventListener('click', function(e){
       e.preventDefault();
       thisFinder.step = 1;
       thisFinder.activeStep(thisFinder.step);
     });
-
-
 
     /* add event listener for all cells that invokes cellSelect() */
   }
