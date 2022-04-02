@@ -101,14 +101,32 @@ class Finder {
     } else if (!thisFinder.selectedCells[cellId]){
       thisFinder.cellSelect(cellId, target);
     }
-    
-    // console.log(thisFinder.selectedCells);
   }
 
   permittedSelection(cellId, target) {
     const thisFinder = this;
 
-    
+    const selectedRow = cellId.split('-')[0];
+    const selectedCol= cellId.split('-')[1];
+
+    const cells = document.querySelectorAll(select.DOMelement.cell);
+
+    for (let cell of cells){
+      const rowNumber = cell.getAttribute('cellid').split('-')[0];
+      const colNumber = cell.getAttribute('cellid').split('-')[1];
+      const permittedCell = rowNumber + '-' + colNumber;
+
+      if(!thisFinder.selectedCells[permittedCell]){
+        if((colNumber == selectedCol && selectedRow == rowNumber -1) ||
+          (colNumber == selectedCol && rowNumber == selectedRow - 1) ||
+          (rowNumber == selectedRow && selectedCol == colNumber -1) ||
+          (rowNumber == selectedRow && colNumber == selectedCol - 1)
+        ){
+          thisFinder.selectedCells[cellId].permittedNext.push(cell);
+        }
+      } 
+    }
+    console.log(thisFinder.selectedCells);
   }
 
   cellSelect(cellId, target){
@@ -116,7 +134,8 @@ class Finder {
  
     thisFinder.selectedCells[cellId] = {
       selected: 'yes',
-      permittedNext: {},
+      element: target,
+      permittedNext: [],
     };
 
     target.classList.add('selected');
