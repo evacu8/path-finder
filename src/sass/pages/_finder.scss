@@ -33,16 +33,21 @@
     align-items: center;
     direction: column;
     margin: 0 auto;
-    outline: 2px solid $color-light;
+    // outline: 2px solid $color-light;
 
     .cell {
       flex: 0 1 auto;
       height: $cell-size;
       width: $cell-size;
-      outline: 2px solid $color-light;
+      outline: 1px solid $color-light;
       content: ' ';
       cursor: pointer;
       margin: 0;
+
+      &.selected {
+        background-color: $color-draw;
+        cursor: not-allowed;
+      }
     }
   }
 }

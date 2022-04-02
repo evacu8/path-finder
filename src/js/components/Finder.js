@@ -10,6 +10,7 @@ class Finder {
     thisFinder.buttons = document.querySelectorAll(select.DOMelement.button);
 
     thisFinder.step = 1;
+    thisFinder.selectedCells = {};
     
     thisFinder.render();
     thisFinder.drawGrid();
@@ -23,7 +24,6 @@ class Finder {
     const generatedHTML = templates.finderGrid;
   
     thisFinder.gridWrapper.innerHTML = generatedHTML();
-
   }
 
   drawGrid() {
@@ -34,11 +34,13 @@ class Finder {
     for (let rowId = 1; rowId <= thisFinder.rowsNumber; rowId++){
       const rowElement = document.createElement('div');
       rowElement.classList.add('row');
+      rowElement.setAttribute('rowId', rowId);
       gridBox.appendChild(rowElement);
 
       for (let cellId = 1; cellId <= thisFinder.rowsNumber; cellId++){
         const cellElement = document.createElement('div');
         cellElement.classList.add('cell');
+        cellElement.setAttribute('cellId', `${rowId}-${cellId}`);
         rowElement.appendChild(cellElement);
       }
     }
@@ -61,7 +63,6 @@ class Finder {
     activeHeader.classList.add('active');
 
     thisFinder.activeButton = document.querySelector(`[class="button-wrapper"] [id="step-${stepId}b"]`);
-    // console.log(thisFinder.activeButton);
     thisFinder.activeButton.classList.add('active');
   }
 
@@ -86,14 +87,41 @@ class Finder {
       thisFinder.activeStep(thisFinder.step);
     });
 
-    /* add event listener for all cells that invokes cellSelect() */
+    document.querySelector(select.DOMelement.gridBox).addEventListener('click', function(e){
+      const target = e.target;
+      const cellId = target.getAttribute('cellId');
+      thisFinder.cellCheck(cellId, target);
+    });
   }
 
-  cellSelect() {
-    // const thisFinder = this;
+  cellCheck(cellId, target) {
+    const thisFinder = this;
+    if (thisFinder.selectedCells == {}){
+      thisFinder.cellSelect(cellId, target);
+    } else if (!thisFinder.selectedCells[cellId]){
+      thisFinder.cellSelect(cellId, target);
+    }
+    
+    // console.log(thisFinder.selectedCells);
+  }
 
-    /* changes cell class to selected, reduces the next selection to neighbours */
+  permittedSelection(cellId, target) {
+    const thisFinder = this;
 
+    
+  }
+
+  cellSelect(cellId, target){
+    const thisFinder = this;
+ 
+    thisFinder.selectedCells[cellId] = {
+      selected: 'yes',
+      permittedNext: {},
+    };
+
+    target.classList.add('selected');
+
+    thisFinder.permittedSelection(cellId, target);
   }
 }
 

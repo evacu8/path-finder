@@ -16,6 +16,7 @@ export const select = {
     gridHeader: '.grid-header',
     gridBox: '.grid-box',
     button: '.button',
+    cell: '.cell',
   },
 
 
