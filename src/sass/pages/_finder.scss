@@ -33,7 +33,6 @@
     align-items: center;
     direction: column;
     margin: 0 auto;
-    // outline: 2px solid $color-light;
 
     .cell {
       flex: 0 1 auto;
@@ -43,9 +42,15 @@
       content: ' ';
       cursor: pointer;
       margin: 0;
+      
+      &.permitted {
+        background-color: $color-draw;
+        opacity: 0.3;
+      }
 
       &.selected {
         background-color: $color-draw;
+        opacity: 1;
       }
     }
   }

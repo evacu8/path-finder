@@ -12,7 +12,7 @@ class Finder {
 
     thisFinder.step = 1;
     thisFinder.selectedCells = {};
-    thisFinder.permittedNext = {};
+    thisFinder.allowedMoves = {};
 
     
     thisFinder.render();
@@ -100,46 +100,24 @@ class Finder {
   cellCheck(cellId, target) {
     const thisFinder = this;
 
-    if (Object.keys(thisFinder.selectedCells).length === 0){
+    if (Object.keys(thisFinder.selectedCells).length === 0){  // first selection - OK
       thisFinder.cellSelect(cellId, target);
+      thisFinder.nextMoves();
 
-    } else if (!thisFinder.selectedCells.hasOwnProperty(cellId)){
-      if (thisFinder.permittedNext[cellId]){
+    } else if (!thisFinder.selectedCells.hasOwnProperty(cellId)){ // next selections different than first - OK
+      if (thisFinder.allowedMoves[cellId]){ //and being permitted - OK
         thisFinder.cellSelect(cellId, target);
       } else { 
         alert('Please select adjacent cell');
       }
 
-    } else if (thisFinder.selectedCells.hasOwnProperty(cellId)){
-      thisFinder.cellDisselect(cellId, target);
+    } else if (thisFinder.selectedCells.hasOwnProperty(cellId)){ // unselect a cell - OK
+      if (thisFinder.continuityCheck(cellId)){ // check if this cell has exactly two adjacent selected cells
+        alert('I can not unselect a cell in the middle of the path');
+      } else {
+        thisFinder.cellUnselect(cellId, target);
+      }
     } 
-  }
-
-  permittedSelection(cellId) {
-    const thisFinder = this;
-
-    const selectedRow = cellId.split('-')[0];
-    const selectedCol= cellId.split('-')[1];
-
-    const cells = document.querySelectorAll(select.DOMelement.cell);
-
-    for (let cell of cells){
-      const rowNumber = cell.getAttribute('cellid').split('-')[0];
-      const colNumber = cell.getAttribute('cellid').split('-')[1];
-      const comparedCell = rowNumber + '-' + colNumber;
-
-      if(!thisFinder.selectedCells.hasOwnProperty(comparedCell)){
-        if((colNumber == selectedCol && selectedRow == rowNumber -1) ||
-          (colNumber == selectedCol && rowNumber == selectedRow - 1) ||
-          (rowNumber == selectedRow && selectedCol == colNumber - 1) ||
-          (rowNumber == selectedRow && colNumber == selectedCol - 1)
-        ){
-          thisFinder.permittedNext[comparedCell] = {
-            element: cell,
-          };
-        }
-      } 
-    }
   }
 
   cellSelect(cellId, target){
@@ -148,18 +126,104 @@ class Finder {
     thisFinder.selectedCells[cellId] = {
       selected: 'yes',
       element: target,
+      neighbours: {},
+      selectedNeighbours: {},
+      // notSelectedNeighbours: {}, 
     };
 
     target.classList.add('selected');
-    thisFinder.permittedSelection(cellId);
+
+    thisFinder.findNeighbours(); // look in the grid for neighbours
+    console.log('neighbours', thisFinder.selectedCells[cellId].neighbours);
+    thisFinder.selectedNeighbours(); // check if there are any selected neighbours
+    console.log('selected neighbours', thisFinder.selectedCells[cellId].selectedNeighbours);
+    thisFinder.nextMoves(); // check permitted moves
+    console.log('allowedMoves', thisFinder.allowedMoves);
+
+    // thisFinder.renderPermitted();
+
   }
 
-  cellDisselect(cellId, target){
+  cellUnselect(cellId, target){
     const thisFinder = this;
 
     target.classList.remove('selected');
+
     delete thisFinder.selectedCells[cellId];
- 
+  
+    thisFinder.findNeighbours(); // look in the grid for neighbours
+    // console.log('neighbours', thisFinder.selectedCells[cellId].neighbours);
+    thisFinder.selectedNeighbours(); // check if there are any selected neighbours
+    // console.log('selected neighbours', thisFinder.selectedCells[cellId].selectedNeighbours);
+    thisFinder.nextMoves(); // check permitted moves
+    console.log('allowedMoves', thisFinder.allowedMoves);
+
+    // thisFinder.renderPermitted();
+
+  }
+
+  findNeighbours(){ 
+    const thisFinder = this;
+    
+    thisFinder.allowedMoves = {};
+
+    for (let cellId in thisFinder.selectedCells){
+      
+      const selectedRow = cellId.split('-')[0];
+      const selectedCol= cellId.split('-')[1];
+
+      const cells = document.querySelectorAll(select.DOMelement.cell);
+      
+      for (let cell of cells){
+        const rowNumber = cell.getAttribute('cellid').split('-')[0];
+        const colNumber = cell.getAttribute('cellid').split('-')[1];
+        const comparedCell = rowNumber + '-' + colNumber;
+        
+        if((colNumber == selectedCol && selectedRow == rowNumber -1) || // check if cell is adjacent to cellId
+        (colNumber == selectedCol && rowNumber == selectedRow - 1) ||
+        (rowNumber == selectedRow && selectedCol == colNumber - 1) ||
+        (rowNumber == selectedRow && colNumber == selectedCol - 1)
+        ){
+          thisFinder.selectedCells[cellId].neighbours[comparedCell] = { // add it to it's neighbours
+            element: cell,
+          };
+          thisFinder.allowedMoves[comparedCell] = {
+            element: cell,
+          };
+        }
+      }
+    }
+  }
+
+  selectedNeighbours(){
+    const thisFinder = this;
+
+    for (let cellId in thisFinder.selectedCells){
+      const neighbours = thisFinder.selectedCells[cellId].neighbours;
+      
+      for (let neighbour in neighbours){
+        if (thisFinder.selectedCells.hasOwnProperty(neighbour)){ // check if cell is selected
+          thisFinder.selectedCells[cellId].selectedNeighbours[neighbour] = {
+            element: neighbours[neighbour].element,
+          };
+        }
+      }
+    }
+  }
+
+  nextMoves(){
+    const thisFinder = this;
+
+    for (let cellId in thisFinder.selectedCells){
+      delete thisFinder.allowedMoves[cellId];
+    }    
+  }
+
+
+  continuityCheck(cellId){
+    const thisFinder = this;
+    
+    return Object.keys(thisFinder.selectedCells[cellId].selectedNeighbours.length === 2);
   }
 }
 
