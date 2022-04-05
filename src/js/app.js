@@ -1,4 +1,4 @@
-import { settings, select, classNames} from './settings.js';
+import { select, classNames} from './settings.js';
 import Finder from './components/Finder.js';
 
 const app = {
@@ -60,10 +60,6 @@ const app = {
 
   init: function(){
     const thisApp = this;
-    console.log('*** App starting ***');
-    console.log('thisApp:', thisApp);
-    console.log('classNames:', classNames);
-    console.log('settings:', settings);
     thisApp.initFinder();
     thisApp.initPages();
   },

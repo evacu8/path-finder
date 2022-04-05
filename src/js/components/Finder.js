@@ -100,19 +100,18 @@ class Finder {
   cellCheck(cellId, target) {
     const thisFinder = this;
 
-    if (Object.keys(thisFinder.selectedCells).length === 0){  // first selection - OK
+    if (Object.keys(thisFinder.selectedCells).length === 0){
       thisFinder.cellSelect(cellId, target);
-      thisFinder.nextMoves();
 
-    } else if (!thisFinder.selectedCells.hasOwnProperty(cellId)){ // next selections different than first - OK
-      if (thisFinder.allowedMoves[cellId]){ //and being permitted - OK
+    } else if (!thisFinder.selectedCells.hasOwnProperty(cellId)){
+      if (thisFinder.allowedMoves[cellId]){
         thisFinder.cellSelect(cellId, target);
       } else { 
         alert('Please select adjacent cell');
       }
 
-    } else if (thisFinder.selectedCells.hasOwnProperty(cellId)){ // unselect a cell - OK
-      if (thisFinder.continuityCheck(cellId)){ // check if this cell has exactly two adjacent selected cells
+    } else if (thisFinder.selectedCells.hasOwnProperty(cellId)){ 
+      if (!thisFinder.continuityCheck(cellId)){
         alert('I can not unselect a cell in the middle of the path');
       } else {
         thisFinder.cellUnselect(cellId, target);
@@ -128,17 +127,16 @@ class Finder {
       element: target,
       neighbours: {},
       selectedNeighbours: {},
-      // notSelectedNeighbours: {}, 
     };
 
     target.classList.add('selected');
 
-    thisFinder.findNeighbours(); // look in the grid for neighbours
-    console.log('neighbours', thisFinder.selectedCells[cellId].neighbours);
-    thisFinder.selectedNeighbours(); // check if there are any selected neighbours
-    console.log('selected neighbours', thisFinder.selectedCells[cellId].selectedNeighbours);
-    thisFinder.nextMoves(); // check permitted moves
-    console.log('allowedMoves', thisFinder.allowedMoves);
+    thisFinder.findNeighbours();
+    // console.log('neighbours', thisFinder.selectedCells[cellId].neighbours);
+    thisFinder.selectedNeighbours();
+    // console.log('selected neighbours', thisFinder.selectedCells[cellId].selectedNeighbours);
+    thisFinder.nextMoves();
+    // console.log('allowedMoves', thisFinder.allowedMoves);
 
     // thisFinder.renderPermitted();
 
@@ -151,12 +149,10 @@ class Finder {
 
     delete thisFinder.selectedCells[cellId];
   
-    thisFinder.findNeighbours(); // look in the grid for neighbours
-    // console.log('neighbours', thisFinder.selectedCells[cellId].neighbours);
-    thisFinder.selectedNeighbours(); // check if there are any selected neighbours
-    // console.log('selected neighbours', thisFinder.selectedCells[cellId].selectedNeighbours);
-    thisFinder.nextMoves(); // check permitted moves
-    console.log('allowedMoves', thisFinder.allowedMoves);
+    thisFinder.findNeighbours();
+    thisFinder.selectedNeighbours();
+    thisFinder.nextMoves(); 
+    // console.log('allowedMoves', thisFinder.allowedMoves);
 
     // thisFinder.renderPermitted();
 
@@ -179,12 +175,12 @@ class Finder {
         const colNumber = cell.getAttribute('cellid').split('-')[1];
         const comparedCell = rowNumber + '-' + colNumber;
         
-        if((colNumber == selectedCol && selectedRow == rowNumber -1) || // check if cell is adjacent to cellId
+        if((colNumber == selectedCol && selectedRow == rowNumber -1) ||
         (colNumber == selectedCol && rowNumber == selectedRow - 1) ||
         (rowNumber == selectedRow && selectedCol == colNumber - 1) ||
         (rowNumber == selectedRow && colNumber == selectedCol - 1)
         ){
-          thisFinder.selectedCells[cellId].neighbours[comparedCell] = { // add it to it's neighbours
+          thisFinder.selectedCells[cellId].neighbours[comparedCell] = {
             element: cell,
           };
           thisFinder.allowedMoves[comparedCell] = {
@@ -201,8 +197,10 @@ class Finder {
     for (let cellId in thisFinder.selectedCells){
       const neighbours = thisFinder.selectedCells[cellId].neighbours;
       
+      thisFinder.selectedCells[cellId].selectedNeighbours = {};
+
       for (let neighbour in neighbours){
-        if (thisFinder.selectedCells.hasOwnProperty(neighbour)){ // check if cell is selected
+        if (thisFinder.selectedCells.hasOwnProperty(neighbour)){
           thisFinder.selectedCells[cellId].selectedNeighbours[neighbour] = {
             element: neighbours[neighbour].element,
           };
@@ -219,11 +217,49 @@ class Finder {
     }    
   }
 
-
-  continuityCheck(cellId){
+  continuityCheck(cellId){ 
     const thisFinder = this;
+
+    const selectedNeighbours = thisFinder.selectedCells[cellId].selectedNeighbours;
+    console.log('selectedNeighbours', selectedNeighbours);
+    const sltdNeighboursArray = Object.keys(selectedNeighbours);
+    console.log('sltdNeighboursArray', sltdNeighboursArray);
+
+    thisFinder.queue = [];
+    thisFinder.visited = [];
+    thisFinder.visited.push(cellId);
+
     
-    return Object.keys(thisFinder.selectedCells[cellId].selectedNeighbours.length === 2);
+    const checker = (array1, array2) => array2.every(v => array1.includes(v));
+
+    thisFinder.queue.push(sltdNeighboursArray[0]);
+    
+    while (thisFinder.queue.length !== 0){
+      let cell = thisFinder.queue[0];
+      console.log('current cell', cell);
+      thisFinder.visited.push(cell);
+      console.log('queue', thisFinder.queue);
+
+      thisFinder.queue.shift();
+      console.log('queue behind current cell after shift', thisFinder.queue);
+ 
+      if(checker(thisFinder.visited, sltdNeighboursArray)){
+        console.log('checker result', checker(thisFinder.visited, sltdNeighboursArray));
+        console.log('found all neigbours of cellId in visited');
+        console.log('queue2', thisFinder.queue);
+        console.log('visited', thisFinder.visited);
+
+        return true;
+      } else {
+        const nextLevelNeighbours = Object.keys(thisFinder.selectedCells[cell].selectedNeighbours);
+        console.log('next level neighbours', nextLevelNeighbours);
+        const filteredNeighbours = nextLevelNeighbours.filter(e => !thisFinder.visited.includes(e));
+        console.log('filtered next level neighbours', filteredNeighbours);
+        for (let a of filteredNeighbours){
+          thisFinder.queue.push(a);
+        }
+      }
+    }
   }
 }
 
