@@ -14,7 +14,7 @@ class Finder {
     thisFinder.selectedCells = {};
     thisFinder.allowedMoves = {};
 
-    
+
     thisFinder.render();
     thisFinder.drawGrid();
     thisFinder.activeStep(thisFinder.step);
@@ -132,13 +132,9 @@ class Finder {
     target.classList.add('selected');
 
     thisFinder.findNeighbours();
-    // console.log('neighbours', thisFinder.selectedCells[cellId].neighbours);
     thisFinder.selectedNeighbours();
-    // console.log('selected neighbours', thisFinder.selectedCells[cellId].selectedNeighbours);
     thisFinder.nextMoves();
-    // console.log('allowedMoves', thisFinder.allowedMoves);
-
-    // thisFinder.renderPermitted();
+    thisFinder.renderPermitted();
 
   }
 
@@ -152,9 +148,7 @@ class Finder {
     thisFinder.findNeighbours();
     thisFinder.selectedNeighbours();
     thisFinder.nextMoves(); 
-    // console.log('allowedMoves', thisFinder.allowedMoves);
-
-    // thisFinder.renderPermitted();
+    thisFinder.renderPermitted();
 
   }
 
@@ -215,6 +209,14 @@ class Finder {
     for (let cellId in thisFinder.selectedCells){
       delete thisFinder.allowedMoves[cellId];
     }    
+  }
+
+  renderPermitted(){
+    const thisFinder = this;
+
+    for (let allowedMove in thisFinder.allowedMoves){
+      this.allowedMoves[allowedMove].element.classList.add('permitted');
+    }
   }
 
   continuityCheck(cellId){ 
