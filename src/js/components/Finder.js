@@ -13,14 +13,15 @@ class Finder {
     thisFinder.step = 1;
     thisFinder.selectedCells = {};
     thisFinder.allowedMoves = {};
-
-
+    
+    thisFinder.boundHandleClick = thisFinder.handleClick.bind(thisFinder);
+    
     thisFinder.render();
     thisFinder.drawGrid();
     thisFinder.activeStep(thisFinder.step);
     thisFinder.initActions();
   }
-
+  
   render() {
     const thisFinder = this;
 
@@ -98,11 +99,15 @@ class Finder {
       thisFinder.activeStep(thisFinder.step);
     });
 
-    document.querySelector(select.DOMelement.gridBox).addEventListener('click', function(e){
-      const target = e.target;
-      const cellId = target.getAttribute('cellId');
-      thisFinder.cellCheck(cellId, target);
-    });
+    document.querySelector(select.DOMelement.gridBox).addEventListener('click', thisFinder.boundHandleClick);
+  }
+
+  handleClick(e){
+    const thisFinder = this;
+
+    const target = e.target;
+    const cellId = target.getAttribute('cellId');
+    thisFinder.cellCheck(cellId, target);
   }
 
   cellCheck(cellId, target) {
@@ -281,6 +286,8 @@ class Finder {
     const thisFinder = this;
 
     thisFinder.removePermitted();
+    thisFinder.disableListener();
+
   }
 
   removePermitted(){
@@ -289,8 +296,14 @@ class Finder {
     for(let cell in thisFinder.allowedMoves){
       thisFinder.allowedMoves[cell].element.classList.remove('permitted');
     }
-    
   }
+
+  disableListener(){
+    const thisFinder = this;
+
+    document.querySelector(select.DOMelement.gridBox).removeEventListener('click', thisFinder.boundHandleClick);
+  }
+
 }
 
 
