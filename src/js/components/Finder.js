@@ -34,19 +34,17 @@ class Finder {
 
     const gridBox = document.querySelector(select.DOMelement.gridBox);
 
-    for (let rowId = 1; rowId <= thisFinder.rowsNumber; rowId++){
-      const rowElement = document.createElement('div');
-      rowElement.classList.add('row');
-      rowElement.setAttribute('rowId', rowId);
-      gridBox.appendChild(rowElement);
+    let html = '';
 
-      for (let cellId = 1; cellId <= thisFinder.rowsNumber; cellId++){
-        const cellElement = document.createElement('div');
-        cellElement.classList.add('cell');
-        cellElement.setAttribute('cellId', `${rowId}-${cellId}`);
-        rowElement.appendChild(cellElement);
+    for (let rowId = 1; rowId <= thisFinder.rowsNumber; rowId++){
+      html+= `<div class="row" rowId="${rowId}">`;
+      for (let cellId = 1; cellId <= thisFinder.columnsNumber; cellId++){
+        html+= `<div class="cell" cellId="${rowId}-${cellId}"></div>`;
       }
+      html+= '</div>';
     }
+
+    gridBox.innerHTML = html;
   }
 
   activeStep(stepId) {
@@ -147,7 +145,7 @@ class Finder {
   
     thisFinder.findNeighbours();
     thisFinder.selectedNeighbours();
-    thisFinder.nextMoves(); 
+    thisFinder.nextMoves();
     thisFinder.renderPermitted();
 
   }
@@ -214,6 +212,11 @@ class Finder {
   renderPermitted(){
     const thisFinder = this;
 
+    const allCells = document.querySelectorAll('.cell');
+    for (let cell of allCells){
+      cell.classList.remove('permitted');
+    }
+
     for (let allowedMove in thisFinder.allowedMoves){
       this.allowedMoves[allowedMove].element.classList.add('permitted');
     }
@@ -223,9 +226,9 @@ class Finder {
     const thisFinder = this;
 
     const selectedNeighbours = thisFinder.selectedCells[cellId].selectedNeighbours;
-    console.log('selectedNeighbours', selectedNeighbours);
+    // console.log('selectedNeighbours', selectedNeighbours);
     const sltdNeighboursArray = Object.keys(selectedNeighbours);
-    console.log('sltdNeighboursArray', sltdNeighboursArray);
+    // console.log('sltdNeighboursArray', sltdNeighboursArray);
 
     thisFinder.queue = [];
     thisFinder.visited = [];
@@ -238,25 +241,25 @@ class Finder {
     
     while (thisFinder.queue.length !== 0){
       let cell = thisFinder.queue[0];
-      console.log('current cell', cell);
+      // console.log('current cell', cell);
       thisFinder.visited.push(cell);
-      console.log('queue', thisFinder.queue);
+      // console.log('queue', thisFinder.queue);
 
       thisFinder.queue.shift();
-      console.log('queue behind current cell after shift', thisFinder.queue);
+      // console.log('queue behind current cell after shift', thisFinder.queue);
  
       if(checker(thisFinder.visited, sltdNeighboursArray)){
-        console.log('checker result', checker(thisFinder.visited, sltdNeighboursArray));
-        console.log('found all neigbours of cellId in visited');
-        console.log('queue2', thisFinder.queue);
-        console.log('visited', thisFinder.visited);
+        // console.log('checker result', checker(thisFinder.visited, sltdNeighboursArray));
+        // console.log('found all neigbours of cellId in visited');
+        // console.log('queue2', thisFinder.queue);
+        // console.log('visited', thisFinder.visited);
 
         return true;
       } else {
         const nextLevelNeighbours = Object.keys(thisFinder.selectedCells[cell].selectedNeighbours);
-        console.log('next level neighbours', nextLevelNeighbours);
+        // console.log('next level neighbours', nextLevelNeighbours);
         const filteredNeighbours = nextLevelNeighbours.filter(e => !thisFinder.visited.includes(e));
-        console.log('filtered next level neighbours', filteredNeighbours);
+        // console.log('filtered next level neighbours', filteredNeighbours);
         for (let a of filteredNeighbours){
           thisFinder.queue.push(a);
         }
