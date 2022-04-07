@@ -53,6 +53,16 @@
         background-color: $color-draw;
         opacity: 1;
       }
+
+      &.start {
+        background-color: $color-start;
+        opacity: 1;
+      }
+      
+      &.finish {
+        background-color: $color-finish;
+        opacity: 1;
+      }
     }
   }
 }

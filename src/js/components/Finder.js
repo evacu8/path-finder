@@ -15,6 +15,8 @@ class Finder {
     thisFinder.allowedMoves = {};
     
     thisFinder.boundHandleClick = thisFinder.handleClick.bind(thisFinder);
+    thisFinder.boundStartHandler = thisFinder.startHandler.bind(thisFinder);
+    thisFinder.boundfinishHandler = thisFinder.finishHandler.bind(thisFinder);
     
     thisFinder.render();
     thisFinder.drawGrid();
@@ -69,7 +71,6 @@ class Finder {
 
       
     if(stepId == 2){
-      console.log('pick start and finish');
       thisFinder.initStepTwo();
     } else if(stepId == 3) {
       console.log('computing the shortest way');
@@ -287,6 +288,7 @@ class Finder {
 
     thisFinder.removePermitted();
     thisFinder.disableListener();
+    thisFinder.selectStart();
 
   }
 
@@ -304,6 +306,60 @@ class Finder {
     document.querySelector(select.DOMelement.gridBox).removeEventListener('click', thisFinder.boundHandleClick);
   }
 
+  selectStart(){
+    const thisFinder = this;
+
+    document.querySelector(select.DOMelement.gridBox).addEventListener('click', thisFinder.boundStartHandler);
+  }
+
+  startHandler(e){
+    const thisFinder = this;
+
+    const target = e.target;
+    const cellId = target.getAttribute('cellId');
+
+    if(target.classList.contains('selected')){
+      target.classList.add('start');
+  
+      thisFinder.start = {
+        id: cellId,
+        element: target
+      };
+  
+      document.querySelector(select.DOMelement.gridBox).removeEventListener('click', thisFinder.boundStartHandler);
+  
+      thisFinder.selectFinish();
+    } else {
+      alert('Select an element of the path');
+    }
+  }
+
+  selectFinish(){
+    const thisFinder = this;
+    console.log('select finish');
+    document.querySelector(select.DOMelement.gridBox).addEventListener('click', thisFinder.boundFinishHandler);
+  }
+
+
+  finishHandler(e){
+    const thisFinder = this;
+
+    const target = e.target;
+    const cellId = target.getAttribute('cellId');
+
+    if(target.classList.contains('selected start')){
+      alert('Path can not start and finish at the same point');
+    } else {
+      target.classList.add('finish');
+  
+      thisFinder.finish = {
+        id: cellId,
+        element: target
+      };
+      console.log('finish', thisFinder.finish);
+      document.querySelector(select.DOMelement.gridBox).removeEventListener('click', thisFinder.boundFinishHandler);
+    }
+  }
 }
 
 

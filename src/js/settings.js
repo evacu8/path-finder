@@ -17,6 +17,7 @@ export const select = {
     gridBox: '.grid-box',
     button: '.button',
     cell: '.cell',
+    selectedCell: '.grid-box .selected',
   },
 
 
