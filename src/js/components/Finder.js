@@ -65,6 +65,16 @@ class Finder {
 
     thisFinder.activeButton = document.querySelector(`[class="button-wrapper"] [id="step-${stepId}b"]`);
     thisFinder.activeButton.classList.add('active');
+
+      
+    if(stepId == 2){
+      console.log('pick start and finish');
+      thisFinder.initStepTwo();
+    } else if(stepId == 3) {
+      console.log('computing the shortest way');
+      thisFinder.initStepThree();
+
+    }
   }
 
   initActions() {
@@ -265,6 +275,21 @@ class Finder {
         }
       }
     }
+  }
+
+  initStepTwo(){
+    const thisFinder = this;
+
+    thisFinder.removePermitted();
+  }
+
+  removePermitted(){
+    const thisFinder = this;
+
+    for(let cell in thisFinder.allowedMoves){
+      thisFinder.allowedMoves[cell].element.classList.remove('permitted');
+    }
+    
   }
 }
 
