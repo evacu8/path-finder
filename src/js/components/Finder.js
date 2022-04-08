@@ -337,18 +337,20 @@ class Finder {
   selectFinish(){
     const thisFinder = this;
     console.log('select finish');
-    document.querySelector(select.DOMelement.gridBox).addEventListener('click', thisFinder.boundFinishHandler);
+    document.querySelector(select.DOMelement.gridBox).addEventListener('click', thisFinder.boundfinishHandler);
   }
-
 
   finishHandler(e){
     const thisFinder = this;
 
+    console.log('finish handler triggered');
     const target = e.target;
     const cellId = target.getAttribute('cellId');
 
     if(target.classList.contains('selected start')){
       alert('Path can not start and finish at the same point');
+    } else if (!target.classList.contains('selected')){
+      alert('Select an element of the path');
     } else {
       target.classList.add('finish');
   
@@ -356,9 +358,16 @@ class Finder {
         id: cellId,
         element: target
       };
+      thisFinder.disableFinishHandler();
+
       console.log('finish', thisFinder.finish);
-      document.querySelector(select.DOMelement.gridBox).removeEventListener('click', thisFinder.boundFinishHandler);
     }
+  }
+
+  disableFinishHandler(){
+    const thisFinder = this;
+    console.log('finish handler disabled');
+    document.querySelector(select.DOMelement.gridBox).removeEventListener('click', thisFinder.boundfinishHandler);
   }
 }
 
