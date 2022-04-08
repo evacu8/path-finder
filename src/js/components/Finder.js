@@ -312,20 +312,28 @@ class Finder {
     document.querySelector(select.DOMelement.gridBox).addEventListener('click', thisFinder.boundStartHandler);
   }
 
+  findInSelected(className){
+    const thisFinder = this;
+
+    for (let cellId in thisFinder.selectedCells){
+      const element = thisFinder.selectedCells[cellId].element;
+      if(element.classList.contains(className)){
+        thisFinder[className] = cellId;
+      }
+    }
+  }
+
   startHandler(e){
     const thisFinder = this;
 
     const target = e.target;
-    const cellId = target.getAttribute('cellId');
 
     if(target.classList.contains('selected')){
       target.classList.add('start');
-  
-      thisFinder.start = {
-        id: cellId,
-        element: target
-      };
-  
+
+      thisFinder.findInSelected('start');
+      // console.log(thisFinder);
+
       document.querySelector(select.DOMelement.gridBox).removeEventListener('click', thisFinder.boundStartHandler);
   
       thisFinder.selectFinish();
@@ -336,16 +344,14 @@ class Finder {
 
   selectFinish(){
     const thisFinder = this;
-    console.log('select finish');
+    // console.log('select finish');
     document.querySelector(select.DOMelement.gridBox).addEventListener('click', thisFinder.boundfinishHandler);
   }
 
   finishHandler(e){
     const thisFinder = this;
 
-    console.log('finish handler triggered');
     const target = e.target;
-    const cellId = target.getAttribute('cellId');
 
     if(target.classList.contains('selected start')){
       alert('Path can not start and finish at the same point');
@@ -354,21 +360,78 @@ class Finder {
     } else {
       target.classList.add('finish');
   
-      thisFinder.finish = {
-        id: cellId,
-        element: target
-      };
+      thisFinder.findInSelected('finish');
+
       thisFinder.disableFinishHandler();
 
-      console.log('finish', thisFinder.finish);
+      // console.log(thisFinder);
     }
   }
 
   disableFinishHandler(){
     const thisFinder = this;
-    console.log('finish handler disabled');
+    // console.log('finish handler disabled');
     document.querySelector(select.DOMelement.gridBox).removeEventListener('click', thisFinder.boundfinishHandler);
   }
+
+  initStepThree(){
+    const thisFinder = this;
+
+    const start = thisFinder.start;
+    const finish = thisFinder.finish;
+
+    thisFinder.computeShortestWay(start, finish);
+  }
+
+  computeShortestWay(start, finish){
+    const thisFinder = this;
+    console.log(thisFinder);
+    const selectedNeighbours = thisFinder.selectedCells[start].selectedNeighbours;
+    // console.log('selectedNeighbours', selectedNeighbours);
+    const sltdNeighboursArray = Object.keys(selectedNeighbours);
+    // console.log('sltdNeighboursArray', sltdNeighboursArray);
+
+    thisFinder.queue = [];
+    thisFinder.visited = [];
+    thisFinder.visited.push(start);
+
+
+    thisFinder.queue.push(sltdNeighboursArray[0]);
+    
+    while (thisFinder.queue.length !== 0){
+      let cell = thisFinder.queue[0];
+      // console.log('current cell', cell);
+      thisFinder.visited.push(cell);
+      // console.log('queue', thisFinder.queue);
+
+      thisFinder.queue.shift();
+      // console.log('queue behind current cell after shift', thisFinder.queue);
+ 
+      if(cell === finish){
+        // console.log('checker result', checker(thisFinder.visited, sltdNeighboursArray));
+        // console.log('found all neigbours of cellId in visited');
+        // console.log('queue2', thisFinder.queue);
+        // console.log('visited', thisFinder.visited);
+
+        thisFinder.renderShortestPath();
+      } else {
+        const nextLevelNeighbours = Object.keys(thisFinder.selectedCells[cell].selectedNeighbours);
+        // console.log('next level neighbours', nextLevelNeighbours);
+        const filteredNeighbours = nextLevelNeighbours.filter(e => !thisFinder.visited.includes(e));
+        // console.log('filtered next level neighbours', filteredNeighbours);
+        for (let a of filteredNeighbours){
+          thisFinder.queue.push(a);
+        }
+      }
+    }
+  }
+
+  renderShortestPath(){
+    const thisFinder = this;
+
+    console.log('start', thisFinder.start, 'finish', thisFinder.finish);
+  }
+
 }
 
 
