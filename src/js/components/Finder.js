@@ -91,10 +91,8 @@ class Finder {
       thisFinder.activeStep(thisFinder.step);
     });
 
-    document.querySelector(`[class="button-wrapper"] [id="step-3b"]`).addEventListener('click', function(e){
-      e.preventDefault();
-      thisFinder.step = 1;
-      thisFinder.activeStep(thisFinder.step);
+    document.querySelector(`[class="button-wrapper"] [id="step-3b"]`).addEventListener('click', function(){
+      location.reload();
     });
 
     document.querySelector(select.DOMelement.gridBox).addEventListener('click', thisFinder.boundHandleClick);
