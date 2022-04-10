@@ -68,14 +68,11 @@ class Finder {
 
     thisFinder.activeButton = document.querySelector(`[class="button-wrapper"] [id="step-${stepId}b"]`);
     thisFinder.activeButton.classList.add('active');
-
-      
+    
     if(stepId == 2){
       thisFinder.initStepTwo();
     } else if(stepId == 3) {
-      console.log('computing the shortest way');
       thisFinder.initStepThree();
-
     }
   }
 
@@ -137,10 +134,13 @@ class Finder {
     const thisFinder = this;
  
     thisFinder.selectedCells[cellId] = {
+      id: cellId,
       selected: 'yes',
       element: target,
       neighbours: {},
       selectedNeighbours: {},
+      distance: 0,
+      predecessor: null
     };
 
     target.classList.add('selected');
@@ -332,7 +332,6 @@ class Finder {
       target.classList.add('start');
 
       thisFinder.findInSelected('start');
-      // console.log(thisFinder);
 
       document.querySelector(select.DOMelement.gridBox).removeEventListener('click', thisFinder.boundStartHandler);
   
@@ -344,7 +343,6 @@ class Finder {
 
   selectFinish(){
     const thisFinder = this;
-    // console.log('select finish');
     document.querySelector(select.DOMelement.gridBox).addEventListener('click', thisFinder.boundfinishHandler);
   }
 
@@ -363,14 +361,11 @@ class Finder {
       thisFinder.findInSelected('finish');
 
       thisFinder.disableFinishHandler();
-
-      // console.log(thisFinder);
     }
   }
 
   disableFinishHandler(){
     const thisFinder = this;
-    // console.log('finish handler disabled');
     document.querySelector(select.DOMelement.gridBox).removeEventListener('click', thisFinder.boundfinishHandler);
   }
 
@@ -385,53 +380,60 @@ class Finder {
 
   computeShortestWay(start, finish){
     const thisFinder = this;
-    console.log(thisFinder);
+    thisFinder.selectedCells[start].distance = 0;
     const selectedNeighbours = thisFinder.selectedCells[start].selectedNeighbours;
-    // console.log('selectedNeighbours', selectedNeighbours);
     const sltdNeighboursArray = Object.keys(selectedNeighbours);
-    // console.log('sltdNeighboursArray', sltdNeighboursArray);
 
     thisFinder.queue = [];
+    thisFinder.visitedObj = {};
     thisFinder.visited = [];
     thisFinder.visited.push(start);
 
-
-    thisFinder.queue.push(sltdNeighboursArray[0]);
+    sltdNeighboursArray.forEach(elem => thisFinder.queue.push(elem));
+    sltdNeighboursArray.forEach(elem => thisFinder.selectedCells[elem].predecessor = start);
     
     while (thisFinder.queue.length !== 0){
       let cell = thisFinder.queue[0];
-      // console.log('current cell', cell);
-      thisFinder.visited.push(cell);
-      // console.log('queue', thisFinder.queue);
+
+      if(!thisFinder.visited.includes(cell)){
+        thisFinder.visited.push(cell);
+      }
 
       thisFinder.queue.shift();
-      // console.log('queue behind current cell after shift', thisFinder.queue);
- 
-      if(cell === finish){
-        // console.log('checker result', checker(thisFinder.visited, sltdNeighboursArray));
-        // console.log('found all neigbours of cellId in visited');
-        // console.log('queue2', thisFinder.queue);
-        // console.log('visited', thisFinder.visited);
-
+      if(thisFinder.selectedCells[cell].id === thisFinder.selectedCells[finish].id){
         thisFinder.renderShortestPath();
       } else {
         const nextLevelNeighbours = Object.keys(thisFinder.selectedCells[cell].selectedNeighbours);
-        // console.log('next level neighbours', nextLevelNeighbours);
         const filteredNeighbours = nextLevelNeighbours.filter(e => !thisFinder.visited.includes(e));
-        // console.log('filtered next level neighbours', filteredNeighbours);
         for (let a of filteredNeighbours){
           thisFinder.queue.push(a);
+          thisFinder.selectedCells[a].predecessor = cell;
+          thisFinder.selectedCells[a].distance = thisFinder.selectedCells[cell].distance +1;
         }
+
       }
     }
+
+    thisFinder.visited.forEach(elem => thisFinder.visitedObj[elem] = thisFinder.selectedCells[elem]);
   }
 
   renderShortestPath(){
     const thisFinder = this;
 
-    console.log('start', thisFinder.start, 'finish', thisFinder.finish);
-  }
+    thisFinder.shortestPath = [thisFinder.finish];
 
+    thisFinder.shortestPathQueue = [thisFinder.finish];
+
+    while (thisFinder.shortestPathQueue.length !== 0){
+      let cell = thisFinder.shortestPathQueue.shift();
+      thisFinder.shortestPath.push(thisFinder.selectedCells[cell]);
+      thisFinder.selectedCells[cell].element.classList.add('shortest');
+
+      if(thisFinder.selectedCells[cell].predecessor){
+        thisFinder.shortestPathQueue.push(thisFinder.selectedCells[cell].predecessor);
+      }
+    }
+  }
 }
 
 
