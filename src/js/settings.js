@@ -19,11 +19,6 @@ export const select = {
     cell: '.cell',
     selectedCell: '.grid-box .selected',
   },
-
-
-  all: {
-    
-  },
   
   nav: {
     links: '.main-nav a',
@@ -32,7 +27,11 @@ export const select = {
 
 export const classNames = {
   cell: {
-    
+    selected: 'selected',
+    permitted: 'permitted',
+    start: 'start',
+    finish: 'finish',
+    shortest: 'shortest'
   },
   nav: {
     active: 'active',

@@ -1,5 +1,5 @@
 /* eslint-disable no-prototype-builtins */
-import { select, settings, templates } from '../settings.js';
+import { select, settings, templates, classNames } from '../settings.js';
 
 class Finder {
   constructor() {
@@ -141,7 +141,7 @@ class Finder {
       predecessor: null
     };
 
-    target.classList.add('selected');
+    target.classList.add(classNames.cell.selected);
 
     thisFinder.findNeighbours();
     thisFinder.selectedNeighbours();
@@ -153,7 +153,7 @@ class Finder {
   cellUnselect(cellId, target){
     const thisFinder = this;
 
-    target.classList.remove('selected');
+    target.classList.remove(classNames.cell.selected);
 
     delete thisFinder.selectedCells[cellId];
   
@@ -228,11 +228,11 @@ class Finder {
 
     const allCells = document.querySelectorAll('.cell');
     for (let cell of allCells){
-      cell.classList.remove('permitted');
+      cell.classList.remove(classNames.cell.permitted);
     }
 
     for (let allowedMove in thisFinder.allowedMoves){
-      this.allowedMoves[allowedMove].element.classList.add('permitted');
+      this.allowedMoves[allowedMove].element.classList.add(classNames.cell.permitted);
     }
   }
 
@@ -240,40 +240,27 @@ class Finder {
     const thisFinder = this;
 
     const selectedNeighbours = thisFinder.selectedCells[cellId].selectedNeighbours;
-    // console.log('selectedNeighbours', selectedNeighbours);
     const sltdNeighboursArray = Object.keys(selectedNeighbours);
-    // console.log('sltdNeighboursArray', sltdNeighboursArray);
 
     thisFinder.queue = [];
     thisFinder.visited = [];
     thisFinder.visited.push(cellId);
-
     
     const checker = (array1, array2) => array2.every(v => array1.includes(v));
 
     thisFinder.queue.push(sltdNeighboursArray[0]);
     
     while (thisFinder.queue.length !== 0){
-      let cell = thisFinder.queue[0];
-      // console.log('current cell', cell);
+      let cell = thisFinder.queue.shift();
       thisFinder.visited.push(cell);
-      // console.log('queue', thisFinder.queue);
 
-      thisFinder.queue.shift();
-      // console.log('queue behind current cell after shift', thisFinder.queue);
- 
       if(checker(thisFinder.visited, sltdNeighboursArray)){
-        // console.log('checker result', checker(thisFinder.visited, sltdNeighboursArray));
-        // console.log('found all neigbours of cellId in visited');
-        // console.log('queue2', thisFinder.queue);
-        // console.log('visited', thisFinder.visited);
-
         return true;
+
       } else {
         const nextLevelNeighbours = Object.keys(thisFinder.selectedCells[cell].selectedNeighbours);
-        // console.log('next level neighbours', nextLevelNeighbours);
         const filteredNeighbours = nextLevelNeighbours.filter(e => !thisFinder.visited.includes(e));
-        // console.log('filtered next level neighbours', filteredNeighbours);
+
         for (let a of filteredNeighbours){
           thisFinder.queue.push(a);
         }
@@ -294,7 +281,7 @@ class Finder {
     const thisFinder = this;
 
     for(let cell in thisFinder.allowedMoves){
-      thisFinder.allowedMoves[cell].element.classList.remove('permitted');
+      thisFinder.allowedMoves[cell].element.classList.remove(classNames.cell.permitted);
     }
   }
 
@@ -326,10 +313,10 @@ class Finder {
 
     const target = e.target;
 
-    if(target.classList.contains('selected')){
-      target.classList.add('start');
+    if(target.classList.contains(classNames.cell.selected)){
+      target.classList.add(classNames.cell.start);
 
-      thisFinder.findInSelected('start');
+      thisFinder.findInSelected(classNames.cell.start);
 
       document.querySelector(select.DOMelement.gridBox).removeEventListener('click', thisFinder.boundStartHandler);
   
@@ -351,12 +338,12 @@ class Finder {
 
     if(target.classList.contains('selected start')){
       alert('Path can not start and finish at the same point');
-    } else if (!target.classList.contains('selected')){
+    } else if (!target.classList.contains(classNames.cell.selected)){
       alert('Select an element of the path');
     } else {
-      target.classList.add('finish');
+      target.classList.add(classNames.cell.finish);
   
-      thisFinder.findInSelected('finish');
+      thisFinder.findInSelected(classNames.cell.finish);
 
       thisFinder.disableFinishHandler();
     }
@@ -373,10 +360,10 @@ class Finder {
     const start = thisFinder.start;
     const finish = thisFinder.finish;
 
-    thisFinder.computeShortestWay(start, finish);
+    thisFinder.computeShortestPath(start, finish);
   }
 
-  computeShortestWay(start, finish){
+  computeShortestPath(start, finish){
     const thisFinder = this;
     thisFinder.selectedCells[start].distance = 0;
     const selectedNeighbours = thisFinder.selectedCells[start].selectedNeighbours;
@@ -391,13 +378,12 @@ class Finder {
     sltdNeighboursArray.forEach(elem => thisFinder.selectedCells[elem].predecessor = start);
     
     while (thisFinder.queue.length !== 0){
-      let cell = thisFinder.queue[0];
+      let cell = thisFinder.queue.shift();
 
       if(!thisFinder.visited.includes(cell)){
         thisFinder.visited.push(cell);
       }
-
-      thisFinder.queue.shift();
+      
       if(thisFinder.selectedCells[cell].id === thisFinder.selectedCells[finish].id){
         thisFinder.renderShortestPath();
       } else {
@@ -425,7 +411,7 @@ class Finder {
     while (thisFinder.shortestPathQueue.length !== 0){
       let cell = thisFinder.shortestPathQueue.shift();
       thisFinder.shortestPath.push(thisFinder.selectedCells[cell]);
-      thisFinder.selectedCells[cell].element.classList.add('shortest');
+      thisFinder.selectedCells[cell].element.classList.add(classNames.cell.shortest);
 
       if(thisFinder.selectedCells[cell].predecessor){
         thisFinder.shortestPathQueue.push(thisFinder.selectedCells[cell].predecessor);
@@ -433,6 +419,5 @@ class Finder {
     }
   }
 }
-
 
 export default Finder;
