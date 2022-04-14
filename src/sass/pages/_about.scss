@@ -1,5 +1,4 @@
 .image-wrapper{
-  position: absolute;
   white-space: nowrap;
 
   .image {
@@ -17,23 +16,38 @@
 }
 
 .image-wrapper-1 {
-  top: 190px;
-  left: 145px;
+  position: relative;
+  margin-left: 11%;
+
+  img {
+    height: auto;
+    width: 37vw;
+  }
 
   .image-description{
     position: absolute;
-    top: 310px;
-    left: 425px;
+    bottom: 10%;
+    left: 22%;
   }
 }
 
 .image-wrapper-2 {
-  top: 815px;
-  left: 580px;
+  position: relative;
+  margin-top: 5%;
+
+  img {
+    margin-left: 32vw;
+    height: auto;
+    width: 60vw;
+  }
 
   .image-description{
     position: absolute;
-    top: 50px;
-    left: -355px;
+    left: 15%;
+    top: 5vw;
   }
+}
+
+.opaque {
+  opacity: 0;
 }

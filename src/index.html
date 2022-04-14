@@ -2,7 +2,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -10,63 +11,69 @@
 	<title>Path finder</title>
 </head>
 <body>
-  <div class="app-wrapper container">
+
+  <header class="header container-fluid">
     <div class="main-nav">
-      <ul>
-        <li>
-          <a href="#about">About</a>
-        </li>
-        <li>
+      <div>
+        <a href="#about">About</a>
+      </div>
+      <div>
           <a href="#finder">Finder</a>
-        </li>
-      </ul>
+      </div>
     </div>
-    <div class="splash">
-      <h1>Pathfinder</h1>
-      <h3>For travellers</h3>
+  </header>
+
+  <div class="splash">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Pathfinder</h1>
+      </div>
+      <div class="col-md-12">
+        <h3>For travellers</h3>
+      </div>
     </div>
-    <div id="pages">
-      <section id="about">
-        <div id="about-wrapper" class="about-wrapper">
-          <div class="image-wrapper image-wrapper-1" >
-            <div class="image image-1 scroll-container">
-              <img src="../images/1.jpg" alt="Plan your journeys" class="js-scroll fade-in">
-              <div class="image-description js-scroll fade-in">
-                <h2>Plan your journeys</h2>
-                <p>Pick attractions and book hotels</p>
-              </div>
-            </div>
-          </div>
-          <div class="image-wrapper image-wrapper-2">
-            <div class="image image-2 scroll-container">
-              <img src="../images/2.jpg" alt="Minimalize boredom" class="js-scroll fade-in">
-              <div class="image-description js-scroll fade-in">
-                <h2>Minimalize boredom</h2>
-                <p>Pick routes that are short and attractive</p>
-              </div>
-            </div>
+  </div>
+
+  <div id="pages">
+
+    <div id="about">
+      <div id="about-wrapper" class="about-wrapper container-fluid">
+        <div class="image-wrapper image-wrapper-1 row" >  
+          <img src="../images/1.jpg" alt="Plan your journeys" class="js-scroll fade-in opaque">
+          <div class="image-description js-scroll fade-in opaque col-md-12">
+            <h2>Plan your journeys</h2>
+            <p>Pick attractions and book hotels</p>
           </div>
         </div>
-      </section>
-      <section id="finder">
-        <div id="finder-wrapper" class="finder-wrapper">
-          <div class="finder-header">
-            <h2 class="grid-header active" id="step-1">Draw routes</h2>
-            <h2 class="grid-header" id="step-2">Pick start and finish</h2>
-            <h2 class="grid-header" id="step-3">The best route is...</h2>
-          </div>
-          <div class="grid-wrapper"></div>
-          <div class="button-wrapper">
-            <a href="#finish-drawing" id="step-1b" class="button active">Finish drawing</a>
-            <a href="#compute" id="step-2b" class="button">Compute</a>
-            <a href="#start-again" id="step-3b" class="button">Start again</a>
+        <div class="image-wrapper image-wrapper-2 row">
+          <img src="../images/2.jpg" alt="Minimalize boredom" class="js-scroll fade-in opaque">
+          <div class="image-description js-scroll fade-in opaque col-md-12">
+            <h2>Minimalize boredom</h2>
+            <p>Pick routes that are short and attractive</p>
           </div>
         </div>
-      </section>
+      </div>
     </div>
-    <div class="footer">
-      <p>All rights reserved</p>
+
+    <div id="finder">
+      <div id="finder-wrapper" class="finder-wrapper container">
+        <div class="finder-header">
+          <h2 class="grid-header active" id="step-1">Draw routes</h2>
+          <h2 class="grid-header" id="step-2">Pick start and finish</h2>
+          <h2 class="grid-header" id="step-3">The best route is...</h2>
+        </div>
+        <div class="grid-wrapper"></div>
+        <div class="button-wrapper">
+          <a href="#finish-drawing" id="step-1b" class="button active">Finish drawing</a>
+          <a href="#compute" id="step-2b" class="button">Compute</a>
+          <a href="#start-again" id="step-3b" class="button">Start again</a>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="footer">
+    <p>All rights reserved</p>
   </div>
 
   <script id="template-finder-grid" type="text/x-handlebars-template">
@@ -76,9 +83,10 @@
   </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
-
   <script src="js/animateOnScroll.js"></script>
-
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="js/app.js" type="module"></script>
 
 </body>

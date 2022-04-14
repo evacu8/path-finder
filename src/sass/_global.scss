@@ -20,4 +20,9 @@
   line-height: 50px;
   text-decoration: none;
   color: $color-light;
+
+  &:hover {
+    text-decoration: none;
+    color: $color-light;
+  }
 }

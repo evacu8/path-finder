@@ -2,26 +2,17 @@
   box-sizing: border-box;
 }
 
-.app-wrapper {
-  background: $color-dark;
-  background-image: url('../images/background.jpg');
-  background-repeat: no-repeat;
-  background-size: 115%;
-  height: 2220px;
-}
-
 body {
-  margin: 0;
   font-family: $font-text;
   font-size: 40px;
   letter-spacing: 4px;
   line-height: 27px;
   color: $color-light;
   position: relative;
-}
-
-.container {
-  margin: 0 auto;
+  background: $color-dark;
+  background-image: url('../images/background.jpg');
+  background-size: 100%;
+  background-repeat: no-repeat;
 }
 
 .splash {
@@ -29,42 +20,40 @@ body {
   text-transform: uppercase;
   width: max-content;
   margin: 0 auto;
-  margin-top: 170px;
+  margin-top: 120px;
+  margin-bottom: 200px;
+
+  .row {
+    flex-direction: column;
+    width: max-content;
+  }
 
   h1 {
-    margin-left: 60px;
-    margin-bottom: 35px;
+    margin-right: -60px;
+    margin-bottom: 0px;
   }
 
   h3 {
     text-align: end;
-    margin-right: 60px;
     margin-top: 0;
   }
 }
 
 .main-nav {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-
-  ul {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    margin: 60 auto;
-    list-style-type: none;
+  margin-top: 60px;
+ 
+  a {
+    text-decoration: none;
+    color: $color-light;
+    text-transform: uppercase;
+    padding: 0 50px;
     font-size: 30px;
     letter-spacing: 2px;
-    font-weight: $font-semibold;
-    
-    a {
-      text-decoration: none;
-      color: $color-light;
-      text-transform: uppercase;
-      padding: 0 50px;
-    }
+    font-weight: $font-semibold;  
   }
 }
 
@@ -76,10 +65,6 @@ body {
 .footer {
   font-size: 20px;
   font-weight: $font-normal;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   text-align: center;
   margin: 100px auto;
 }
