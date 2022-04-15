@@ -326,7 +326,6 @@ class Finder {
     thisFinder.removePermitted();
     thisFinder.disableListener();
     thisFinder.selectStart();
-
   }
 
   removePermitted(){
@@ -388,7 +387,7 @@ class Finder {
 
     const target = e.target;
 
-    if(target.classList.contains('selected start')){
+    if(target.classList.contains('start')){
       thisFinder.showModal(4);
     } else if (!target.classList.contains(classNames.cell.selected)){
       thisFinder.showModal(3);
