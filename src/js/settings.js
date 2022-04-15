@@ -1,6 +1,7 @@
 export const select = {
   templateOf: {
     finderGrid: '#template-finder-grid',
+    modal: '#template-modal',
   },
 
   containerOf: {
@@ -10,6 +11,7 @@ export const select = {
     grid: '.grid-wrapper',
     headers: '.finder-header',
     buttons: '.button-wrapper',
+    modal: '#modal-wrapper',
   },
 
   DOMelement: {
@@ -31,7 +33,8 @@ export const classNames = {
     permitted: 'permitted',
     start: 'start',
     finish: 'finish',
-    shortest: 'shortest'
+    shortest: 'shortest',
+    activated: 'activated',
   },
   nav: {
     active: 'active',
@@ -43,6 +46,7 @@ export const classNames = {
 
 export const templates= {
   finderGrid: Handlebars.compile(document.querySelector(select.templateOf.finderGrid).innerHTML),
+  modal: Handlebars.compile(document.querySelector(select.templateOf.modal).innerHTML),
 };
 
 export const settings = {

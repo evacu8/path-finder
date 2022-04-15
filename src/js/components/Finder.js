@@ -7,6 +7,7 @@ class Finder {
     thisFinder.rowsNumber = settings.finderGrid.rows,
     thisFinder.columnsNumber = settings.finderGrid.columns,
     thisFinder.gridWrapper = document.querySelector(select.containerOf.grid),
+    thisFinder.modal = document.querySelector(select.containerOf.modal),
     thisFinder.headers = document.querySelectorAll(select.DOMelement.gridHeader),
     thisFinder.buttons = document.querySelectorAll(select.DOMelement.button);
 
@@ -21,6 +22,7 @@ class Finder {
     thisFinder.render();
     thisFinder.drawGrid();
     thisFinder.activeStep(thisFinder.step);
+    thisFinder.renderModals();
     thisFinder.initActions();
   }
   
@@ -96,6 +98,12 @@ class Finder {
     });
 
     document.querySelector(select.DOMelement.gridBox).addEventListener('click', thisFinder.boundHandleClick);
+
+    document.querySelector(select.containerOf.modal).addEventListener('click', () => { 
+      let modalElem = document.querySelector('.activated');
+      modalElem.classList.remove('activated');
+      modalElem.classList.add('fade');
+    }); 
   }
 
   handleClick(e){
@@ -104,6 +112,50 @@ class Finder {
     const target = e.target;
     const cellId = target.getAttribute('cellId');
     thisFinder.cellCheck(cellId, target);
+  }
+
+  renderModals(){
+    const thisFinder = this;
+
+    thisFinder.data = {items: [
+      {
+        id: 1,
+        title: 'Alert',
+        description: 'Please select adjacent cell',
+      },
+      {
+        id: 2,
+        title: 'Alert',
+        description: 'I can not unselect a cell in the middle of the path',
+      },
+      {
+        id: 3,
+        title: 'Alert',
+        description: 'Select an element of the path',
+      },
+      {
+        id: 4,
+        title: 'Alert',
+        description: 'Path can not start and finish at the same point',
+      },
+      {
+        id: 5,
+        title: 'Result',
+        description: `The shortest path is ${thisFinder.minMoves} moves`,
+      }
+    ]};
+
+    const generatedModalHTML = templates.modal;
+  
+    thisFinder.modal.innerHTML = generatedModalHTML(thisFinder.data);
+  }
+
+  showModal(id){
+    const thisFinder = this;
+
+    const activeModal = thisFinder.modal.querySelector(`div[class='modal fade'][id='${id}']`);
+    activeModal.classList.remove('fade');
+    activeModal.classList.add('activated');
   }
 
   cellCheck(cellId, target) {
@@ -116,12 +168,12 @@ class Finder {
       if (thisFinder.allowedMoves[cellId]){
         thisFinder.cellSelect(cellId, target);
       } else { 
-        alert('Please select adjacent cell');
+        thisFinder.showModal(1);
       }
 
     } else if (thisFinder.selectedCells.hasOwnProperty(cellId)){ 
       if (!thisFinder.continuityCheck(cellId)){
-        alert('I can not unselect a cell in the middle of the path');
+        thisFinder.showModal(2);
       } else {
         thisFinder.cellUnselect(cellId, target);
       }
@@ -322,7 +374,7 @@ class Finder {
   
       thisFinder.selectFinish();
     } else {
-      alert('Select an element of the path');
+      thisFinder.showModal(3);
     }
   }
 
@@ -337,9 +389,9 @@ class Finder {
     const target = e.target;
 
     if(target.classList.contains('selected start')){
-      alert('Path can not start and finish at the same point');
+      thisFinder.showModal(4);
     } else if (!target.classList.contains(classNames.cell.selected)){
-      alert('Select an element of the path');
+      thisFinder.showModal(3);
     } else {
       target.classList.add(classNames.cell.finish);
   
@@ -385,6 +437,7 @@ class Finder {
       }
       
       if(thisFinder.selectedCells[cell].id === thisFinder.selectedCells[finish].id){
+        thisFinder.minMoves = thisFinder.selectedCells[finish].distance + 1;
         thisFinder.renderShortestPath();
       } else {
         const nextLevelNeighbours = Object.keys(thisFinder.selectedCells[cell].selectedNeighbours);
@@ -417,6 +470,10 @@ class Finder {
         thisFinder.shortestPathQueue.push(thisFinder.selectedCells[cell].predecessor);
       }
     }
+
+    thisFinder.renderModals();
+    thisFinder.showModal(5);
+
   }
 }
 
